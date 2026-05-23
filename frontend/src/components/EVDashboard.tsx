@@ -29,7 +29,7 @@ export function EVDashboard() {
   const [selectedAlert, setSelectedAlert] = useState<EVSession | null>(null);
   const [totalDatasetRows, setTotalDatasetRows] = useState<number>(0);
 
-  const handleFileUpload = useCallback((parsedSessions: EVSession[], totalRows: number) => {
+  const handleFileUpload = useCallback((parsedSessions: EVSession[], totalRows = 0) => {
     setSessions(parsedSessions);
     setTotalDatasetRows(totalRows);
     const firstCritical = parsedSessions.find(s => s.status === "critical");
