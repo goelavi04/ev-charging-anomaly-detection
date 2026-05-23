@@ -8,9 +8,15 @@ A full-stack machine learning application that detects anomalous behaviour in EV
 
 ## Dashboard Preview
 
-> Upload any CSV from the `ml/dataset/` folder to see the dashboard in action.
+![Dashboard Overview](./assets/dashboard-overview.png)
 
-![EV Anomaly Detection Dashboard](https://ev-anomaly-backend.onrender.com)
+*Stats cards showing dataset entries, total anomalies, critical alerts, warnings and per-type breakdown (fraud, DoS, idle abuse)*
+
+![Anomaly Table & Alert Panel](./assets/dashboard-anomaly-table.png)
+
+*Anomaly table with session-level detail alongside the real-time alert panel showing confidence scores and energy usage*
+
+> Upload any CSV from the `ml/dataset/` folder to see the dashboard in action.
 
 The dashboard shows real-time anomaly detection results including:
 - Total dataset entries, anomaly counts by category, critical alerts and warnings
