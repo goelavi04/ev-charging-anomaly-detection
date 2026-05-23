@@ -44,12 +44,12 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       if (axiosError.response) {
         toast.error(
           `Upload failed: ${axiosError.response.data?.detail || 'Server error'}`,
-          { description: 'Please check your backend server is running on http://localhost:8000' }
+          { description: 'Please check that the backend server is reachable' }
         );
       } else if (axiosError.request) {
         toast.error(
           'Cannot connect to backend server',
-          { description: 'Make sure your FastAPI server is running on http://localhost:8000' }
+          { description: 'Make sure the backend server is reachable' }
         );
       } else {
         toast.error('Upload failed', { description: axiosError.message });

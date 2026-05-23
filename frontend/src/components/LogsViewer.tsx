@@ -56,7 +56,7 @@ export function LogsViewer({ onLoadLog }: LogsViewerProps) {
       } else if (axiosError.request) {
         toast.error(
           'Cannot connect to backend server',
-          { description: 'Make sure your FastAPI server is running on http://localhost:8000' }
+          { description: 'Make sure the backend server is reachable' }
         );
       } else {
         toast.error('Failed to fetch logs', { description: axiosError.message });
@@ -163,7 +163,7 @@ export function LogsViewer({ onLoadLog }: LogsViewerProps) {
 
         <div className="mt-4 p-3 bg-slate-800 border border-slate-700 rounded-lg">
           <p className="text-xs text-slate-400">
-            <span className="text-emerald-400 font-semibold">Backend Status:</span> http://localhost:8000
+            <span className="text-emerald-400 font-semibold">Backend Status:</span> {window.location.origin}
           </p>
           <p className="text-xs text-slate-500 mt-1">
             Connected to FastAPI + Supabase
