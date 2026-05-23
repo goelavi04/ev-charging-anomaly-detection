@@ -41,16 +41,19 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       console.error('Upload error:', error);
       const axiosError = error as { response?: { data?: { detail?: string } }; request?: unknown; message?: string };
 
+      const isTimeout = (error as { code?: string }).code === 'ECONNABORTED';
       if (axiosError.response) {
         toast.error(
-          `Upload failed: ${axiosError.response.data?.detail || 'Server error'}`,
-          { description: 'Please check that the backend server is reachable' }
+          `Upload failed: ${axiosError.response.data?.detail || 'Server error'}`
         );
+      } else if (isTimeout) {
+        toast.error('Upload timed out', {
+          description: 'The file is too large or the server is under load. Try a smaller file (max 20,000 rows).',
+        });
       } else if (axiosError.request) {
-        toast.error(
-          'Cannot connect to backend server',
-          { description: 'Make sure the backend server is reachable' }
-        );
+        toast.error('Cannot reach server', {
+          description: 'The backend may be starting up — wait a few seconds and try again.',
+        });
       } else {
         toast.error('Upload failed', { description: axiosError.message });
       }

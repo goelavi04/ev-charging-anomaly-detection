@@ -8,6 +8,7 @@ export async function predictAnomalies(file: File): Promise<PredictionResponse> 
   formData.append('file', file);
   const response = await axios.post<PredictionResponse>(`${API_BASE_URL}/predict`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120_000,
   });
   return response.data;
 }

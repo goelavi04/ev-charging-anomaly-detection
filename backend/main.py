@@ -100,6 +100,9 @@ def health():
     }
 
 
+MAX_ROWS = 20_000
+
+
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
     if not file.filename.endswith('.csv'):
@@ -113,6 +116,13 @@ async def predict(file: UploadFile = File(...)):
         df_raw   = pd.read_csv(io.StringIO(contents.decode('utf-8')))
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Could not read CSV: {e}")
+
+    if len(df_raw) > MAX_ROWS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File has {len(df_raw):,} rows. Maximum allowed is {MAX_ROWS:,}. "
+                   f"Please upload a sampled subset of your data."
+        )
 
     try:
         df = prepare_input(df_raw.copy())
@@ -133,26 +143,26 @@ async def predict(file: UploadFile = File(...)):
     pred_labels   = le.inverse_transform(predictions)
     confidence    = probabilities.max(axis=1)
 
-    anomalies = []
-    for i, (pred, conf) in enumerate(zip(pred_labels, confidence)):
-        if pred == 'normal':
-            continue
+    df['_pred']       = pred_labels
+    df['_confidence'] = confidence
+    anomaly_df = df[df['_pred'] != 'normal'].copy()
 
-        row    = df.iloc[i]
-        record = {
-            "session_id":           str(row.get('session_id', i)),
-            "station_id":           str(row.get('station_id', '')),
-            "anomaly_type":         pred,
-            "confidence":           round(float(conf), 4),
-            "energy_kwh":           round(float(row.get('energy_kwh', 0)), 3),
-            "total_duration_mins":  round(float(row.get('total_duration_mins', 0)), 2),
-            "charging_time_mins":   round(float(row.get('charging_time_mins', 0)), 2),
-            "idle_ratio":           round(float(row.get('idle_ratio', 0)), 4),
-            "energy_zscore":        round(float(row.get('energy_zscore', 0)), 4),
-            "port_type":            str(row.get('port_type', '')),
-            "start_time":           str(row.get('start_time', '')),
+    anomalies = [
+        {
+            "session_id":          str(r.get('session_id', i)),
+            "station_id":          str(r.get('station_id', '')),
+            "anomaly_type":        r['_pred'],
+            "confidence":          round(float(r['_confidence']), 4),
+            "energy_kwh":          round(float(r.get('energy_kwh', 0)), 3),
+            "total_duration_mins": round(float(r.get('total_duration_mins', 0)), 2),
+            "charging_time_mins":  round(float(r.get('charging_time_mins', 0)), 2),
+            "idle_ratio":          round(float(r.get('idle_ratio', 0)), 4),
+            "energy_zscore":       round(float(r.get('energy_zscore', 0)), 4),
+            "port_type":           str(r.get('port_type', '')),
+            "start_time":          str(r.get('start_time', '')),
         }
-        anomalies.append(record)
+        for i, r in anomaly_df.iterrows()
+    ]
 
     save_anomalies_batch(anomalies)
 
