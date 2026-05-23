@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 python-multipart
+aiofiles
 supabase
 python-dotenv
 pandas

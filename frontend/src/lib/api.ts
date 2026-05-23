@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { PredictionResponse, AnomaliesResponse, StatsResponse, HealthResponse } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
 export async function predictAnomalies(file: File): Promise<PredictionResponse> {
   const formData = new FormData();

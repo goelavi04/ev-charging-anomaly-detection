@@ -10,6 +10,8 @@ import pandas as pd
 import numpy as np
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -30,8 +32,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BASE_DIR   = os.path.dirname(__file__)
-MODELS_DIR = os.path.join(BASE_DIR, '..', 'ml', 'models')
+BASE_DIR      = os.path.dirname(__file__)
+MODELS_DIR    = os.path.join(BASE_DIR, '..', 'ml', 'models')
+FRONTEND_DIST = os.path.join(BASE_DIR, '..', 'frontend', 'dist')
 
 try:
     model    = joblib.load(os.path.join(MODELS_DIR, 'best_model.pkl'))
@@ -85,11 +88,6 @@ def prepare_input(df: pd.DataFrame) -> pd.DataFrame:
     # fast=True skips the slow burst detection loop
     df = engineer_features(df, fast=True)
     return df
-
-
-@app.get("/")
-def root():
-    return {"message": "EV Anomaly Detection API is running"}
 
 
 @app.get("/health")
@@ -191,3 +189,8 @@ def get_stats():
         "total":   len(data),
         "by_type": by_type,
     }
+
+
+# Serve built frontend — must be last so API routes take priority
+if os.path.isdir(FRONTEND_DIST):
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
