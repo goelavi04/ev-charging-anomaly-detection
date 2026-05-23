@@ -7,7 +7,7 @@ import { transformBackendAnomalyToSession } from "../lib/transformers";
 import type { EVSession } from "./EVDashboard";
 
 interface FileUploadProps {
-  onFileUpload: (sessions: EVSession[]) => void;
+  onFileUpload: (sessions: EVSession[], totalRows: number) => void;
 }
 
 export function FileUpload({ onFileUpload }: FileUploadProps) {
@@ -28,7 +28,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     try {
       const response = await predictAnomalies(file);
       const sessions = response.anomalies.map(transformBackendAnomalyToSession);
-      onFileUpload(sessions);
+      onFileUpload(sessions, response.total_sessions);
 
       toast.success(
         `Analyzed ${response.total_sessions} sessions. Found ${response.anomalies_found} anomalies.`,

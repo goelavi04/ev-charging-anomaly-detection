@@ -27,9 +27,11 @@ export interface EVSession {
 export function EVDashboard() {
   const [sessions, setSessions] = useState<EVSession[]>([]);
   const [selectedAlert, setSelectedAlert] = useState<EVSession | null>(null);
+  const [totalDatasetRows, setTotalDatasetRows] = useState<number>(0);
 
-  const handleFileUpload = useCallback((parsedSessions: EVSession[]) => {
+  const handleFileUpload = useCallback((parsedSessions: EVSession[], totalRows: number) => {
     setSessions(parsedSessions);
+    setTotalDatasetRows(totalRows);
     const firstCritical = parsedSessions.find(s => s.status === "critical");
     if (firstCritical) {
       setSelectedAlert(firstCritical);
@@ -80,6 +82,7 @@ export function EVDashboard() {
           criticalAlerts={criticalCount}
           warningAlerts={warningCount}
           totalSessions={sessions.length}
+          totalDatasetRows={totalDatasetRows}
           fraudCount={fraudSessions.length}
           dosCount={dosSessions.length}
           multiuserCount={multiuserSessions.length}

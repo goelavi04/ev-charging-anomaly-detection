@@ -1,4 +1,4 @@
-import { Activity, Zap, IndianRupee, Shield, Users, Bell, AlertTriangle } from "lucide-react";
+import { Activity, Zap, IndianRupee, Shield, Users, Bell, AlertTriangle, Database } from "lucide-react";
 import { Card } from "./ui/card";
 
 interface StatsCardsProps {
@@ -6,6 +6,7 @@ interface StatsCardsProps {
   criticalAlerts: number;
   warningAlerts: number;
   totalSessions: number;
+  totalDatasetRows?: number;
   fraudCount?: number;
   dosCount?: number;
   multiuserCount?: number;
@@ -16,6 +17,7 @@ export function StatsCards({
   criticalAlerts,
   warningAlerts,
   totalSessions,
+  totalDatasetRows = 0,
   fraudCount = 0,
   dosCount = 0,
   multiuserCount = 0
@@ -64,7 +66,20 @@ export function StatsCards({
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-slate-900 border-teal-700 border-2 p-5 hover:shadow-lg hover:shadow-teal-700/30 transition-all hover:border-teal-500">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Database className="w-6 h-6 text-teal-400" />
+                <p className="text-white text-base font-bold tracking-wide">Dataset Entries</p>
+              </div>
+              <p className="text-3xl text-teal-400 font-bold">{totalDatasetRows.toLocaleString()}</p>
+              <p className="text-xs text-teal-300 mt-1 font-medium">Total Rows Analysed</p>
+            </div>
+          </div>
+        </Card>
+
         <Card className="bg-slate-900 border-red-700 border-2 p-5 hover:shadow-lg hover:shadow-red-700/30 transition-all hover:border-red-500">
           <div className="flex items-center justify-between">
             <div className="flex-1">
