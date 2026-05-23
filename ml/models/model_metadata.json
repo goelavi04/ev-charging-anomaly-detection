@@ -1,0 +1,56 @@
+{
+  "best_model": "Decision Tree",
+  "features": [
+    "energy_kwh",
+    "total_duration_mins",
+    "charging_time_mins",
+    "energy_per_min",
+    "idle_ratio",
+    "idle_mins",
+    "charge_efficiency",
+    "energy_zscore",
+    "energy_vs_median",
+    "duration_zscore",
+    "station_mean_energy",
+    "station_std_energy",
+    "station_median_energy",
+    "station_session_count",
+    "station_mean_dur",
+    "sessions_last_30min",
+    "hour",
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "is_night",
+    "port_type_num",
+    "ghg_savings"
+  ],
+  "classes": [
+    "burst_pattern",
+    "dos_attack",
+    "energy_spike",
+    "ghost_session",
+    "idle_abuse",
+    "normal"
+  ],
+  "test_accuracy": 65.92,
+  "test_f1_macro": 80.91,
+  "cv_f1_macro": 79.71,
+  "cv_f1_std": 1.14,
+  "all_models": {
+    "Random Forest": {
+      "accuracy": 66.47,
+      "f1_weighted": 60.65,
+      "f1_macro": 78.8,
+      "cv_f1_macro": 77.05,
+      "cv_f1_std": 1.38
+    },
+    "Decision Tree": {
+      "accuracy": 65.92,
+      "f1_weighted": 60.87,
+      "f1_macro": 80.91,
+      "cv_f1_macro": 79.71,
+      "cv_f1_std": 1.14
+    }
+  }
+}
